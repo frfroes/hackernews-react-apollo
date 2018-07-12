@@ -6,6 +6,7 @@
     "@playlyfe/gql": "^2.6.0",
     "apollo-client-preset": "^1.0.8",
     "apollo-link-context": "^1.0.8",
+    "apollo-link-ws": "^1.0.8",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "react": "^16.4.1",
@@ -13,7 +14,8 @@
     "react-dom": "^16.4.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "subscriptions-transport-ws": "^0.9.12"
   },
   "scripts": {
     "start": "react-scripts start",
