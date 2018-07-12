@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { AUTH_TOKEN } from '../constants'
+import { AUTH_TOKEN, USER_DATA } from '../constants'
 
 const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
     signup(email: $email, password: $password, name: $name) {
       token
+      user{
+        id
+      }
     }
   }
 `
@@ -16,6 +19,9 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user{
+        id
+      }
     }
   }
 `
@@ -80,8 +86,8 @@ class Login extends Component {
           password,
         },
       })
-      const { token } = result.data.login
-      this._saveUserData(token)
+      
+      this._saveUserData(result.data.login)
     } else {
       const result = await this.props.signupMutation({
         variables: {
@@ -90,14 +96,15 @@ class Login extends Component {
           password,
         },
       })
-      const { token } = result.data.signup
-      this._saveUserData(token)
+      
+      this._saveUserData(result.data.signup)
     }
     this.props.history.push(`/`)
   }
 
-  _saveUserData = token => {
+  _saveUserData = ({token, user}) => {
     localStorage.setItem(AUTH_TOKEN, token)
+    localStorage.setItem(USER_DATA, JSON.stringify(user))
   }
 }
 
