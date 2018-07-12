@@ -1,0 +1,15 @@
+
+// .gqlconfig (with query)
+{
+  schema: {
+    files: "schemas/**/*.gql"
+  },
+  query: {
+    files: [ /* define file paths which you'd like the gql parser to watch and give autocomplete suggestions for */
+      {
+        match: { include: './src/**/*.js', ignore: '**/tests/**/*.js' },
+        parser: [ 'EmbeddedQueryParser', { startTag: 'gql`', endTag: '`' } ],
+      }
+    ],
+  },
+}
