@@ -32,6 +32,7 @@ class Login extends Component {
     email: '',
     password: '',
     name: '',
+    error: ''
   }
 
   render() {
@@ -60,13 +61,16 @@ class Login extends Component {
             placeholder="Choose a safe password"
           />
         </div>
+        <div className="flex mt2 red">
+          {this.state.error}
+        </div>
         <div className="flex mt3">
           <div className="pointer mr2 button" onClick={() => this._confirm()}>
             {this.state.login ? 'login' : 'create account'}
           </div>
           <div
             className="pointer button"
-            onClick={() => this.setState({ login: !this.state.login })}
+            onClick={() => this.setState({ login: !this.state.login, error: '' })}
           >
             {this.state.login
               ? 'need to create an account?'
@@ -79,27 +83,34 @@ class Login extends Component {
 
   _confirm = async () => {
     const { name, email, password } = this.state
-    if (this.state.login) {
-      const result = await this.props.loginMutation({
-        variables: {
-          email,
-          password,
-        },
-      })
-      
-      this._saveUserData(result.data.login)
-    } else {
-      const result = await this.props.signupMutation({
-        variables: {
-          name,
-          email,
-          password,
-        },
-      })
-      
-      this._saveUserData(result.data.signup)
+    try{
+      if (this.state.login) {
+        const result = await this.props.loginMutation({
+          variables: {
+            email,
+            password,
+          }
+        })
+        this._saveUserData(result.data.login)
+      } else {
+        const result = await this.props.signupMutation({
+          variables: {
+            name,
+            email,
+            password,
+          },
+        })  
+        this._saveUserData(result.data.signup)
+      }
+      this.props.history.push(`/`)
+    }catch(e){
+      if(e.graphQLErrors){
+        const error = e.graphQLErrors[0]
+        console.log(error)
+        this.setState({error: error.message})
+      }
     }
-    this.props.history.push(`/`)
+    
   }
 
   _saveUserData = ({token, user}) => {
