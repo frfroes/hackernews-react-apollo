@@ -4,7 +4,10 @@ import gql from 'graphql-tag'
 
 const POST_LINK_MUTATION = gql`
   mutation PostLinkMutation($description: String!, $url: String!) {
-    postLink(description: $description, url: $url) {
+    postLink(data: {
+      description: $description, 
+      url: $url
+    }) {
       id
       createdAt
       url
